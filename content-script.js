@@ -68,7 +68,7 @@ remove_adds()
 // And remove future ads
 new MutationObserver(remove_adds)
     .observe(
-        document.getElementById('contentArea'),
+        document.body,
         {
             childList: true,
             subtree: true
