@@ -9,7 +9,7 @@ let remove_elements = (elements_list) =>
         //     )
 
         if (!elements_list[len].remove)
-            continue
+        continue
 
         elements_list[len].remove()
     }
@@ -18,7 +18,7 @@ let remove_elements = (elements_list) =>
 let get_element_parent = (el) =>
 {
     return el.classList.contains('_5jmm') ?
-                el : get_element_parent(el.parentElement)
+    el : get_element_parent(el.parentElement)
 }
 
 let get_elements_parents = (elements_list) =>
@@ -49,7 +49,11 @@ let remove_sponsored_link = () =>
 
 let remove_suggested_posts = () =>
 {
-    get_and_remove_elements('._5g-l')
+    document.querySelectorAll('._5jmm')
+    .forEach(el => {
+        if (el.textContent.indexOf('Suggested Post') !== -1)
+            el.remove();
+    })
 }
 
 let remove_adds = () =>
@@ -59,18 +63,21 @@ let remove_adds = () =>
 }
 
 
+document.getElementById('contentArea').style.position = 'static'
+
 // First remove the right column
 document.getElementById('rightCol').remove()
+
 
 // Now remove current ads
 remove_adds()
 
 // And remove future ads
 new MutationObserver(remove_adds)
-    .observe(
-        document.body,
-        {
-            childList: true,
-            subtree: true
-        }
-    )
+.observe(
+    document.body,
+    {
+        childList: true,
+        subtree: true
+    }
+)
