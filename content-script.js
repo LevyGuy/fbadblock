@@ -1,65 +1,37 @@
 
-let remove_elements = (elements_list) =>
+let closest = (el, classStr) =>
 {
-    let len = elements_list.length
-    while(len--)
-    {
-        // console.log('Removing ad',
-        //         elements_list[len].innerText.trim()
-        //     )
-
-        if (!elements_list[len].remove)
-        continue
-
-        elements_list[len].remove()
-    }
+    return el.classList.contains(classStr) ?
+        el : closest(el.parentElement, classStr)
 }
 
-let get_element_parent = (el) =>
+let remove_post = (el) =>
 {
-    return el.classList.contains('_5jmm') ?
-    el : get_element_parent(el.parentElement)
+    let postElement = closest(el, '_5jmm')
+    if (!postElement || !postElement.remove)
+        return
+
+    console.log('removing post: ', postElement.textContent)
+    postElement.remove()
 }
 
-let get_elements_parents = (elements_list) =>
+let is_suggested_post = (el) =>
 {
-    let els = []
-    let i = 0, len = elements_list.length
-    for(; i < len; i++)
-    {
-        els.push(
-            get_element_parent(elements_list[i])
-        )
-    }
-    return els
+    return el.textContent.indexOf('Suggested Post') !== -1
 }
 
-let get_and_remove_elements = (selector) =>
+let is_sponsored_post = (el) =>
 {
-    let els = get_elements_parents(
-        document.querySelectorAll(selector)
-    )
-    remove_elements(els)
-}
-
-let remove_sponsored_link = () =>
-{
-    get_and_remove_elements('.uiStreamSponsoredLink')
-}
-
-let remove_suggested_posts = () =>
-{
-    document.querySelectorAll('._5jmm')
-    .forEach(el => {
-        if (el.textContent.indexOf('Suggested Post') !== -1)
-            el.remove();
-    })
+    return el.textContent.indexOf('Sponsored') !== -1
 }
 
 let remove_adds = () =>
 {
-    remove_sponsored_link()
-    remove_suggested_posts()
+    document.querySelectorAll('._5va4')
+        .forEach(el => {
+            if (is_suggested_post(el) || is_sponsored_post(el))
+                remove_post(el)
+        })
 }
 
 
