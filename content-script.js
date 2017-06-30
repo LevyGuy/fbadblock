@@ -1,32 +1,34 @@
+let number_of_blocked_items = 0
 
-let closest = (el, classStr) =>
-{
+let closest = (el, classStr) => {
     return el.classList.contains(classStr) ?
         el : closest(el.parentElement, classStr)
 }
 
-let remove_post = (el) =>
-{
+let remove_post = (el) => {
     let postElement = closest(el, '_5jmm')
     if (!postElement || !postElement.remove)
         return
 
-    console.log('removing post: ', postElement.textContent)
+    // console.log('removing post: ', postElement.textContent)
+    
     postElement.remove()
+    chrome.runtime.sendMessage({
+        from: 'content-script',
+        title: postElement.textContent,
+        num: ++number_of_blocked_items
+    })
 }
 
-let is_suggested_post = (el) =>
-{
+let is_suggested_post = (el) => {
     return el.textContent.indexOf('Suggested Post') !== -1
 }
 
-let is_sponsored_post = (el) =>
-{
+let is_sponsored_post = (el) => {
     return el.textContent.indexOf('Sponsored') !== -1
 }
 
-let remove_adds = () =>
-{
+let remove_adds = () => {
     document.querySelectorAll('._5va4')
         .forEach(el => {
             if (is_suggested_post(el) || is_sponsored_post(el))
@@ -34,22 +36,18 @@ let remove_adds = () =>
         })
 }
 
-
+// Remove the right column and adjust style
 document.getElementById('contentArea').style.position = 'static'
-
-// First remove the right column
 document.getElementById('rightCol').remove()
-
 
 // Now remove current ads
 remove_adds()
 
 // And remove future ads
 new MutationObserver(remove_adds)
-.observe(
-    document.body,
-    {
-        childList: true,
-        subtree: true
-    }
-)
+    .observe(
+        document.body, {
+            childList: true,
+            subtree: true
+        }
+    )
