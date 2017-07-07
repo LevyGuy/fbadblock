@@ -10,9 +10,8 @@ let remove_post = (el) => {
     if (!postElement || !postElement.remove)
         return
 
-    // console.log('removing post: ', postElement.textContent)
-
     postElement.remove()
+
     chrome.runtime.sendMessage({
         from: 'content-script',
         title: postElement.textContent,
@@ -20,20 +19,36 @@ let remove_post = (el) => {
     })
 }
 
+let find_text_in_element = (el, text) =>
+{
+    return el.textContent.indexOf(text) !== -1
+}
+
 let is_suggested_post = (el) => {
-    return el.textContent.indexOf('Suggested Post') !== -1
+    return find_text_in_element('Suggested Post')
 }
 
 let is_sponsored_post = (el) => {
-    return el.textContent.indexOf('Sponsored') !== -1
+    return find_text_in_element('Sponsored')
 }
 
 let is_you_may_liked_post = (el) => {
-    return el.textContent.indexOf('You May Like') !== -1
+    return find_text_in_element('You May Like')
+}
+
+let remove_right_column = () =>
+{
+    document.getElementById('contentArea').style.position = 'static'
+
+    let el = document.getElementById('rightCol')
+    if (el && el.remove)
+        el.remove()
 }
 
 let remove_adds = () => {
-    
+
+    remove_right_column()
+
     document.querySelectorAll('._5va4')
         .forEach(el => {
             if (is_suggested_post(el) || is_sponsored_post(el))
@@ -47,9 +62,6 @@ let remove_adds = () => {
         })
 }
 
-// Remove the right column and adjust style
-document.getElementById('contentArea').style.position = 'static'
-document.getElementById('rightCol').remove()
 
 // Now remove current ads
 remove_adds()
