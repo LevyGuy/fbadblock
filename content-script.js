@@ -11,7 +11,7 @@ let remove_post = (el) => {
         return
 
     // console.log('removing post: ', postElement.textContent)
-    
+
     postElement.remove()
     chrome.runtime.sendMessage({
         from: 'content-script',
@@ -28,10 +28,21 @@ let is_sponsored_post = (el) => {
     return el.textContent.indexOf('Sponsored') !== -1
 }
 
+let is_you_may_liked_post = (el) => {
+    return el.textContent.indexOf('You May Like') !== -1
+}
+
 let remove_adds = () => {
+    
     document.querySelectorAll('._5va4')
         .forEach(el => {
             if (is_suggested_post(el) || is_sponsored_post(el))
+                remove_post(el)
+        })
+
+    document.querySelectorAll('._5g-l')
+        .forEach(el => {
+            if (is_you_may_liked_post(el))
                 remove_post(el)
         })
 }
