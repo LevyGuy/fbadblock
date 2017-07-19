@@ -25,15 +25,15 @@ let find_text_in_element = (el, text) =>
 }
 
 let is_suggested_post = (el) => {
-    return find_text_in_element('Suggested Post')
+    return find_text_in_element(el, 'Suggested Post')
 }
 
 let is_sponsored_post = (el) => {
-    return find_text_in_element('Sponsored')
+    return find_text_in_element(el, 'Sponsored')
 }
 
 let is_you_may_liked_post = (el) => {
-    return find_text_in_element('You May Like')
+    return find_text_in_element(el, 'You May Like')
 }
 
 let remove_right_column = () =>
