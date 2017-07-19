@@ -55,7 +55,7 @@ let remove_adds = () => {
                 remove_post(el)
         })
 
-    document.querySelectorAll('._5g-l')
+    document.querySelectorAll('._5g-l, .fwb')
         .forEach(el => {
             if (is_you_may_liked_post(el))
                 remove_post(el)
