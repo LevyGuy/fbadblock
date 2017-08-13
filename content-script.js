@@ -28,6 +28,10 @@ let is_suggested_post = (el) => {
     return find_text_in_element(el, 'Suggested Post')
 }
 
+let is_recommended_post = (el) => {
+    return find_text_in_element(el, 'Recommended')
+}
+
 let is_sponsored_post = (el) => {
     return find_text_in_element(el, 'Sponsored')
 }
@@ -57,7 +61,7 @@ let remove_adds = () => {
 
     document.querySelectorAll('._5g-l, .fwb')
         .forEach(el => {
-            if (is_you_may_liked_post(el))
+            if (is_you_may_liked_post(el) || is_recommended_post(el))
                 remove_post(el)
         })
 }
