@@ -5,8 +5,8 @@ let closest = (el, classStr) => {
         el : closest(el.parentElement, classStr)
 }
 
-let remove_post = (el) => {
-    let postElement = closest(el, '_5jmm')
+let remove_post = (el, wrapperClass = '_5jmm') => {
+    let postElement = closest(el, wrapperClass)
     if (!postElement || !postElement.remove)
         return
 
@@ -40,6 +40,15 @@ let is_you_may_liked_post = (el) => {
     return find_text_in_element(el, 'You May Like')
 }
 
+let is_popular_across_facebook = (el) => {
+    return find_text_in_element(el, 'Popular Across Facebook')
+}
+
+let is_related = (el) =>
+{
+    return find_text_in_element(el, 'Related')
+}
+
 let remove_right_column = () =>
 {
     document.getElementById('contentArea').style.position = 'static'
@@ -56,6 +65,12 @@ let remove_adds = () => {
     document.querySelectorAll('._5va4')
         .forEach(el => {
             if (is_suggested_post(el) || is_sponsored_post(el))
+                remove_post(el)
+        });
+
+    document.querySelectorAll('._5_xt')
+        .forEach(el => {
+            if (is_popular_across_facebook(el))
                 remove_post(el)
         })
 
