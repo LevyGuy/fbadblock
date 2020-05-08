@@ -1,4 +1,4 @@
-Facebook ads removal plugin for Google Chrome  
+Facebook ads removal for the new UI plugin for Google Chrome  
 Removes Facebook Suggested and Sponsored posts  
 
 v.2

@@ -3,8 +3,8 @@ const MESSAGE_TYPE = {
     reset_count: 'reset_count'
 };
 
-function sendMessageToBackground(type) {
-    chrome.runtime.sendMessage({ type: type });
+function sendMessageToBackground({type, text = ''}) {
+    chrome.runtime.sendMessage({ type: type, text: text });
 }
 
 function isTextAd(txt) {
@@ -15,60 +15,30 @@ function isTextAd(txt) {
     return false;
 }
 
-function checkAdInArray(arr) {
-    for(let i = 0; i < 5; i++) {
-        if (isTextAd(arr[i])) return true;
-    }
-    return false;
-}
-
-function removeElement(el) {
-    el.remove();
-    sendMessageToBackground(MESSAGE_TYPE.add_count);
-}
-
-function checkForWords(el) {
-    const arr = el.innerText.split('\n');
-    if(checkAdInArray(arr)) {
-        removeElement(el);
-    }
-}
-
-function checkForFuzzer(el) {
-    const h5 = el.querySelector('h5');
-    if (!h5) return;
-    const next = h5.nextElementSibling;
-    if (!next) return;
-    const isFuzzed = next.innerText === ' . ';
-    if (isFuzzed) {
-        removeElement(el);
-    }
-}
-
-function checkElementForAds(el) {
-    checkForWords(el);
-    checkForFuzzer(el);
-}
-
 function remove_adds() {
-    document.querySelectorAll('._5jmm')
-    .forEach(checkElementForAds)
+    const feed = document
+        .querySelector('div[role=feed]');
+    if (!feed) return;
+
+    const pagelets = feed.querySelectorAll('div[data-pagelet]');
+    if (!pagelets || !pagelets.length) return;
+
+    pagelets.forEach(el => {
+        Array.from(el.querySelectorAll('*'))
+            .forEach(iel => {
+                if(iel.style.position === 'absolute') {
+                    iel.remove();
+                }
+            });
+        const isAd = isTextAd(el.innerText);
+        if (isAd) {
+            el.remove();
+            console.log('Removed AD: \n', el.innerText);
+        }
+    })
 }
 
 // // Now remove current ads
+// sendMessageToBackground({type: MESSAGE_TYPE.reset_count});
 remove_adds();
-sendMessageToBackground(MESSAGE_TYPE.reset_count);
-
-
-// And remove future ads
-// new MutationObserver(remove_adds)
-//     .observe(
-//         document.body, 
-//         {
-//             childList: true,
-//             subtree: true
-//         }
-//     )
 window.addEventListener('scroll', remove_adds);
-// window.addEventListener('beforeunload', _ => 
-//     sendMessageToBackground(MESSAGE_TYPE.reset_count));
