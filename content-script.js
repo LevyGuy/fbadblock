@@ -31,7 +31,7 @@ function remove_adds() {
         }
         el._fbadb = 1;
 
-        Array.from(el.querySelectorAll('*'))
+        el.querySelectorAll('*')
             .forEach(iel => {
                 if(iel.style.position === 'absolute') {
                     iel.remove();
