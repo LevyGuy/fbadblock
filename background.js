@@ -5,9 +5,8 @@ chrome.runtime.onMessage.addListener(
     (request, sender, sendResponse) =>
     {
         if (request.type === 'add_count') { 
-            count++;
-            chrome.browserAction.setBadgeText({ text: count.toString() });
-            // chrome.browserAction.setTitle({ title: `Latest bloked ad: ${request.title}` })
+            chrome.browserAction.setBadgeText({ text: (++count).toString() });
+            chrome.browserAction.setTitle({ title: `Latest bloked ad: ${request.text}` })
         }
 
         if (request.type === 'reset_count') {

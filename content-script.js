@@ -7,12 +7,11 @@ function sendMessageToBackground({type, text = ''}) {
     chrome.runtime.sendMessage({ type: type, text: text });
 }
 
+const regexp = /Sponsored|Paid Partnership|Suggested for You/g;
+
 function isTextAd(txt) {
     if (!txt) return false;
-    if (txt.indexOf('Sponsored') !== -1) return true;
-    if (txt.indexOf('Paid Partnership') !== -1) return true;
-    if (txt.indexOf('Suggested for You') !== -1) return true;
-    return false;
+    return regexp.test(txt);
 }
 
 function remove_adds() {
@@ -24,21 +23,35 @@ function remove_adds() {
     if (!pagelets || !pagelets.length) return;
 
     pagelets.forEach(el => {
+
+        // We don't want to iterate on that element over an over.
+        //  So we mark it
+        if (el._fbadb) {
+            return;
+        }
+        el._fbadb = 1;
+
         Array.from(el.querySelectorAll('*'))
             .forEach(iel => {
                 if(iel.style.position === 'absolute') {
                     iel.remove();
                 }
             });
+
         const isAd = isTextAd(el.innerText);
         if (isAd) {
             el.remove();
-            console.log('Removed AD: \n', el.innerText);
+            const {innerText} = el;
+            console.log('Removed AD: \n', innerText);
+            sendMessageToBackground({
+                type: MESSAGE_TYPE.add_count,
+                text: innerText
+            });
         }
     })
 }
 
 // // Now remove current ads
-// sendMessageToBackground({type: MESSAGE_TYPE.reset_count});
+sendMessageToBackground({type: MESSAGE_TYPE.reset_count});
 remove_adds();
 window.addEventListener('scroll', remove_adds);
