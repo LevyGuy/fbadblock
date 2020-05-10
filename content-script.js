@@ -51,7 +51,9 @@ function remove_adds() {
     })
 }
 
-// // Now remove current ads
+// Reset the count on entering the page
 sendMessageToBackground({type: MESSAGE_TYPE.reset_count});
+// Now remove current ads
 remove_adds();
+// And remove future ads
 window.addEventListener('scroll', remove_adds);

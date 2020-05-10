@@ -1,6 +1,6 @@
 {
     "name": "Facebook ads removal for new UI (open source)",
-    "version": "4.0",
+    "version": "5.0",
     "minimum_chrome_version": "75.0",
     "description": "Removes Facebook Suggested and Sponsored posts",
 
