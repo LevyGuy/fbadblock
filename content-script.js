@@ -33,7 +33,8 @@ function remove_adds() {
 
         el.querySelectorAll('*')
             .forEach(iel => {
-                if(iel.style.position === 'absolute') {
+                if(iel.style.position === 'absolute' ||
+                    iel.style.display === 'none') {
                     iel.remove();
                 }
             });
