@@ -26,10 +26,10 @@ function remove_adds() {
 
         // We don't want to iterate on that element over an over.
         //  So we mark it
-        if (el._fbadb) {
-            return;
-        }
-        el._fbadb = 1;
+        // if (el._fbadb) {
+        //     return;
+        // }
+        // el._fbadb = 1;
 
         el.querySelectorAll('*')
             .forEach(iel => {
